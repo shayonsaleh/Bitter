@@ -11,6 +11,8 @@ urlpatterns = patterns('',
     url(r'^login$', 'bitter_app.views.login_view'), # login
     url(r'^logout$', 'bitter_app.views.logout_view'), # logout
     url(r'^signup$', 'bitter_app.views.signup'), # signup
+    url(r'^beets$', 'bitter_app.views.public'),
+    url(r'^submit$', 'bitter_app.views.submit'),
 
     url(r'^admin/', include(admin.site.urls)),
 )

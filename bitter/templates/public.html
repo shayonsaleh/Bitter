@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+    <div class="panel right">
+        <h1>Create a Beet</h1>
+        <p>
+            <form action="/submit" method="post">
+            {% for field in beet_form %}{% csrf_token %}
+            {{ field }}
+            {% endfor %}
+            <input type="hidden" value="{{ next_url }}" name="next_url">
+            <input type="submit" value="Beet It!">
+            </form>
+        </p>
+    </div>
+    <div class="panel left">
+        <h1>Public Beets</h1>
+        {% for beet in beets %}
+        <div class="ribbitWrapper">
+            <img class="avatar" src="{{ beet.user.profile.gravatar_url }}">
+            <span class="name">{{ beet.user.first_name }}</span>@{{ beet.user.username }}
+            <span class="time">{{ beet.creation_date|timesince }}</span>
+            <p>{{ beet.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

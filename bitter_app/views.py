@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from bitter_app.forms import AuthenticateForm, UserCreateForm, BeetForm
 from bitter_app.models import Beet
 
@@ -56,3 +57,27 @@ def signup(request):
         else:
             return index(request, user_form=user_form)
     return redirect('/')
+
+@login_required
+def submit(request):
+    if request.method == "POST":
+        beet_form = BeetForm(data=request.POST)
+        next_url = request.POST.get("next_url", "/")
+        if beet_form.is_valid():
+            beet = beet_form.save(commit=False)
+            beet.user = request.user
+            beet.save()
+            return redirect(next_url)
+        else:
+            return public(request, beet_form)
+    return redirect('/')
+
+@login_required
+def public(request, beet_form=None):
+    beet_form = beet_form or BeetForm()
+    beets = Beet.objects.reverse()[:10]
+    return render(request,
+                  'public.html',
+                  {'beet_form': beet_form, 'next_url': '/beets',
+                   'beets': beets, 'username': request.user.username})
+
