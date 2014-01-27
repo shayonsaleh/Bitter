@@ -13,6 +13,10 @@ urlpatterns = patterns('',
     url(r'^signup$', 'bitter_app.views.signup'), # signup
     url(r'^beets$', 'bitter_app.views.public'),
     url(r'^submit$', 'bitter_app.views.submit'),
+    url(r'^users/$', 'bitter_app.views.users'),
+    url(r'^users/(?P<username>\w{0,30})/$', 'bitter_app.views.users'),
+    url(r'^follow$', 'bitter_app.views.follow'),
+    
 
     url(r'^admin/', include(admin.site.urls)),
 )

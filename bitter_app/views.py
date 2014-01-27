@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Count
+from django.http import Http404
 from bitter_app.forms import AuthenticateForm, UserCreateForm, BeetForm
 from bitter_app.models import Beet
 
@@ -14,7 +17,7 @@ def index(request, auth_form=None, user_form=None):
         beets_self = Beet.objects.filter(user=user.id)
         beets_buddies = Beet.objects.filter(user__userprofile__in=user.profile.follows.all)
         beets = beets_self | beets_buddies
- 
+        beets = beets.order_by('id').reverse()
         return render(request,
                       'buddies.html',
                       {'beet_form': beet_form, 'user': user,
@@ -75,9 +78,49 @@ def submit(request):
 @login_required
 def public(request, beet_form=None):
     beet_form = beet_form or BeetForm()
-    beets = Beet.objects.reverse()[:10]
+    beets = Beet.objects.order_by('id').reverse()[:10]
     return render(request,
                   'public.html',
                   {'beet_form': beet_form, 'next_url': '/beets',
                    'beets': beets, 'username': request.user.username})
 
+def get_latest(user):
+    try:
+        return user.beet_set.order_by('-id')[0]
+    except IndexError:
+        return ""
+        
+@login_required
+def users(request, username="", beet_form=None):
+    if username:
+        # Show a profile
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            raise Http404
+        beets = Beet.objects.filter(user=user.id).order_by('id').reverse()
+        if username == request.user.username or request.user.profile.follows.filter(user__username=username):
+            # Self Profile or buddies' profile
+            return render(request, 'user.html', {'user': user, 'beets': beets, })
+        return render(request, 'user.html', {'user': user, 'beets': beets, 'follow': True, })
+    users = User.objects.all().annotate(beet_count=Count('beet'))
+    beets = map(get_latest, users)
+    obj = zip(users, beets)
+    beet_form = beet_form or BeetForm()
+    return render(request,
+                  'profiles.html',
+                  {'obj': obj, 'next_url': '/users/',
+                   'beet_form': beet_form,
+                   'username': request.user.username, })
+ 
+@login_required
+def follow(request):
+    if request.method == "POST":
+        follow_id = request.POST.get('follow', False)
+        if follow_id:
+            try:
+                user = User.objects.get(id=follow_id)
+                request.user.profile.follows.add(user.profile)
+            except ObjectDoesNotExist:
+                return redirect('/users/')
+    return redirect('/users/')

@@ -1,57 +1,62 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet/less" href="{{ STATIC_URL }}style.less">
-    <script src="{{ STATIC_URL }}less.js"></script>
+    <title>Bitter - A Better Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="{% static 'dist/css/bootstrap.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'dist/css/bootstrap-adj.css' %}" rel="stylesheet" media="screen">
 </head>
 <body>
     <header>
-        <div class="wrapper">
-            <img src="{{ STATIC_URL }}gfx/logo.png">
-            <span>Twitter Clone</span>
-            {% block login %}
-            <a href="/">Home</a>
-            <a href="/users/">Public Profiles</a>
-            <a href="/users/{{ username }}">My Profile</a>
-            <a href="/ribbits">Public Ribbits</a>
-            <form action="/logout">
-                <input type="submit" id="btnLogOut" value="Log Out">
-            </form>
-            {% endblock %}
-        </div>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#"> <img src="{{ STATIC_URL }}gfx/logo.png"> </a>
+                    </div>
+                    <p class="navbar-text">A Better Twitter</p>
+                    {% block login %}
+                    <p class="navbar-text navbar-right">
+                    <a class="navbar-link" href="/">Home</a>
+                    <a class="navbar-link" href="/users/">Public Profiles</a>
+                    <a class="navbar-link" href="/users/{{ username }}">My Profile</a>
+                    <a class="navbar-link" href="/beets">Public Beets</a>
+                    </p>
+                    <form class="navbar-form navbar-right" action="/logout">
+                        <input class="btn btn-default navbar-btn" type="submit" id="btnLogOut" value="Log Out">
+                    </form>
+                    {% endblock %}
+                </div>
+            </div>
+        </nav>
     </header>
-    <div id="content">
-        <div class="wrapper">
-            {% block flash %}
-            {% if auth_form.non_field_errors or user_form.non_field_errors or ribbit_form.errors %}
-            <div class="flash error">
-                {{ auth_form.non_field_errors }}
-                {{ user_form.non_field_errors }}
-                {{ ribbit_form.content.errors }}
+        <div class="container">
+                {% block flash %}
+                {% if notice %}
+                <div class="alert alert-danger">
+                    {{ notice }}
+                </div>
+                {% endif %}
+                {% endblock %}
+     
+                {% block content %}
+     
+                {% endblock %}
             </div>
-            {% endif %}
-            {% if notice %}
-            <div class="flash notice">
-                {{ notice }}
-            </div>
-            {% endif %}
-            {% endblock %}
- 
-            {% block content %}
- 
-            {% endblock %}
         </div>
-    </div>
     <footer>
-        <div class="wrapper">
-            Ribbit - A Twitter Clone Tutorial
-            <a href="http://net.tutsplus.com">
-                <img src="{{ STATIC_URL }}gfx/logo-nettuts.png">
-            </a>
-            <a href="http://www.djangoproject.com/">
-                <img src="https://www.djangoproject.com/m/img/badges/djangomade124x25.gif" border="0" alt="Made with Django." title="Made with Django." />
-            </a>
+        <div class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container text-center">
+                <p class="navbar-text navbar-left" style="margin-top:0px;">Bitter - A Better Twitter</p>
+                <a class="navbar-brand navbar-right" href="http://www.djangoproject.com/">
+                    <img src="https://www.djangoproject.com/m/img/badges/djangomade124x25.gif" border="0" alt="Made with Django." title="Made with Django." />
+                </a>
+            </div>
         </div>
     </footer>
+    <script src="{% static 'dist/js/jquery.js' %}"></script>
+    <script src="{% static 'dist/js/bootstrap.min.js' %}"></script>
 </body>
 </html>

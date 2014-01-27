@@ -1,31 +1,82 @@
 {% extends "base.html" %}
  
 {% block login %}
-    <form action="/login" method="post">{% csrf_token %}
-        {% for field in auth_form %}
-        {{ field }}
-        {% endfor %}
-        <input type="submit" id="btnLogIn" value="Log In">
+    <form class="navbar-form navbar-right" action="/login" method="post">
+            {% csrf_token %}
+            {% for field in auth_form %}
+            <div class="form-group">
+            {{ field }}
+            </div>
+            {% endfor %}
+        <input class="btn btn-default navbar-btn" type="submit" id="btnLogIn" value="Log In">
     </form>
 {% endblock %}
  
 {% block content %}
-{% if auth_form.non_field_errors or user_form.non_field_errors %}
-<div class="flash error">
-    {{ auth_form.non_field_errors }}
-    {{ user_form.non_field_errors }}
-</div>
-{% endif %}
-<img src="{{ STATIC_URL}}gfx/frog.jpg">
-<div class="panel right">
-    <h1>New to Bitter?</h1>
-    <p>
-        <form action="/signup" method="post">{% csrf_token %}
+<div class="row">
+    <div class="col-md-7">
+    <img src="{{ STATIC_URL}}gfx/beet_farm.jpg">
+    </div>
+    <div class="col-md-5">
+        <div>
+        <table class="table table-hover">
             {% for field in user_form %}
-            {{ field }}
+                {% for error in field.errors %}
+                    <tr>
+                        <td>
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
             {% endfor %}
-            <input type="submit" value="Create Account">
-        </form>
-    </p>
+            {% for field in auth_form %}
+                {% for error in field.errors %}
+                    <tr>
+                        <td>
+                            <div class="alert alert-danger">
+                                {{ error }}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            {% for error in auth_form.non_field_errors %}
+                <tr>
+                    <td>
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for error in user_form.non_field_errors %}
+                <tr>
+                    <td>
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td><h4 class="text-center">New to Bitter?</h4></td>
+            </tr>
+            <form action="/signup" method="post">{% csrf_token %}
+                <div class="form-group">
+                {% for field in user_form %}
+                <tr>
+                    <td>{{ field }}</td>
+                </tr>
+                {% endfor %}
+                </div>
+                <tr>
+                    <td><input class="btn btn-beet btn-block" type="submit" value="Create Account"></td>
+                </tr>
+            </form>
+        </table>
+        </div>
+    </div>
 </div>
 {% endblock %}

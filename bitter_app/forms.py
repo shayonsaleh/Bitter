@@ -1,22 +1,19 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from django.utils.html import strip_tags
+from django.utils.html import strip_tags, escape
 from bitter_app.models import Beet
 
 class UserCreateForm(UserCreationForm):
-    email = forms.EmailField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder': 'Email'}))
-    first_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder': 'First Name'}))
-    last_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder': 'Last Name'}))
-    username = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Username'}))
-    password1 = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password'}))
-    password2 = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password Confirmation'}))
+    email = forms.EmailField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder': 'Email', 'class': 'form-control'}))
+    first_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'}))
+    last_name = forms.CharField(required=True, widget=forms.widgets.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'}))
+    username = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}))
+    password1 = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
+    password2 = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password Confirmation', 'class': 'form-control'}))
     
     def is_valid(self):
         form = super(UserCreateForm, self).is_valid()
-        for f, error in self.errors.iteritems():
-            if f!= '__all__':
-                self.fields[f].widget.attrs.update({'class': 'error', 'value': strip_tags(error)})
         return form
     
     class Meta:
@@ -24,14 +21,11 @@ class UserCreateForm(UserCreationForm):
         model = User
 
 class AuthenticateForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Username'}))
-    password = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password'}))
+    username = forms.CharField(widget=forms.widgets.TextInput(attrs={'placeholder': 'Username', 'class': 'form-control'}))
+    password = forms.CharField(widget=forms.widgets.PasswordInput(attrs={'placeholder': 'Password', 'class': 'form-control'}))
  
     def is_valid(self):
         form = super(AuthenticateForm, self).is_valid()
-        for f, error in self.errors.iteritems():
-            if f != '__all__':
-                self.fields[f].widget.attrs.update({'class': 'error', 'value': strip_tags(error)})
         return form
 
 class BeetForm(forms.ModelForm):
@@ -39,11 +33,8 @@ class BeetForm(forms.ModelForm):
     
     def is_valid(self):
         form = super(BeetForm, self).is_valid()
-        for f in self.errors.iterkeys():
-            if f != '__all__':
-                self.fields[f].widget.attrs.update({'class': 'error beetText'})
         return form
     
     class Meta:
         model = Beet
-        exlude = ('user',)
+        exclude = ('user',)

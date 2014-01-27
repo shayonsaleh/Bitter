@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block login %}
+    {% with user.username as username %}
+        {{ block.super }}
+    {% endwith %}
+{% endblock %}
+ 
+{% block content %}
+    <div class="row">
+        <div class="col-md-5 col-md-offset-1">
+            <table class="table" style="table-layout:fixed; word-wrap:break-word;">
+                <tr>
+                    <td><h1>{{ user.first_name }}'s Beets</h1></td>
+                </tr>
+                {% for beet in beets %}
+                <tr>
+                    <td>
+                        <div>
+                            <a href="/users/{{ user.username }}">
+                                <img class="avatar" src="{{ STATIC_URL }}gfx/default_avatar.jpg">
+                                <span class="name">{{ beet.user.first_name }}</span>
+                            </a>
+                            @{{ beet.user.username }}
+                            <span class="time">{{ beet.creation_date|timesince }} ago</span>
+                            <p>{{ beet.content }}</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    
+        <div class="col-md-4 col-md-offset-1">
+            <table class="table">
+                <tr>
+                    <td><h1>{{ user.first_name }}'s Profile</h1></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="ribbitWrapper">
+                            <a href="/users/{{ user.username }}">
+                                <img class="avatar" src="{{ STATIC_URL }}gfx/default_avatar.jpg">
+                                <span class="name">{{ user.first_name }}</span>
+                            </a>
+                                @{{ user.username }}
+                            <p>
+                                {{ beets.count }} Beets
+                                <span class="spacing">{{ user.profile.follows.all.count }} Following</span>
+                                <span class="spacing">{{ user.profile.followed_by.all.count }} Followers</span>
+                            </p>
+                            {% if follow %}
+                            <form action="/follow" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="follow" value="{{ user.id }}">
+                                <input class="btn btn-beet btn-block" type="submit" value="Follow">
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

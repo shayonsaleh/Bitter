@@ -1,27 +1,55 @@
 {% extends "base.html" %}
  
 {% block content %}
-    <div class="panel right">
-        <h1>Create a Beet</h1>
-        <p>
-            <form action="/submit" method="post">
-            {% for field in beet_form %}{% csrf_token %}
-            {{ field }}
-            {% endfor %}
-            <input type="hidden" value="{{ next_url }}" name="next_url">
-            <input type="submit" value="Beet It!">
-            </form>
-        </p>
-    </div>
-    <div class="panel left">
-        <h1>Public Beets</h1>
-        {% for beet in beets %}
-        <div class="ribbitWrapper">
-            <img class="avatar" src="{{ beet.user.profile.gravatar_url }}">
-            <span class="name">{{ beet.user.first_name }}</span>@{{ beet.user.username }}
-            <span class="time">{{ beet.creation_date|timesince }}</span>
-            <p>{{ beet.content }}</p>
+    <div class="row">
+        <div class="col-md-5 col-md-offset-1">
+            <table class="table" style="table-layout:fixed; word-wrap:break-word;">
+                <tr>
+                    <td><h1>Public Beets</h1></td>
+                </tr>
+                {% for beet in beets %}
+                    <tr>
+                        <td>
+                            <div>
+                                <a href="/users/{{ user.username }}">
+                                    <img class="avatar" src="{{ STATIC_URL }}gfx/default_avatar.jpg">
+                                    <span class="name">{{ beet.user.first_name }}</span> 
+                                </a>
+                                @{{ beet.user.username }}
+                                <span class="time">{{ beet.creation_date|timesince }} ago</span>
+                                <p>{{ beet.content }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
-        {% endfor %}
+        <div class="col-md-4 col-md-offset-1 text-center">
+            <table class="table">
+                <tr>
+                    <td><h1>Create a Beet</h1></td>
+                </tr>
+                {% if beet_form.errors %}
+                    <tr>
+                        <td>
+                            <div class="alert alert-danger">
+                                {{ beet_form.content.errors }}
+                            </div>
+                        </td>
+                    </tr>
+                {% endif %}
+                <form action="/submit" method="post">
+                {% for field in beet_form %}{% csrf_token %}
+                    <tr>
+                    <td>{{ field }}</td>
+                    </tr>
+                {% endfor %}
+                <input type="hidden" value="{{ next_url }}" name="next_url">
+                <tr>
+                    <td><input class="btn btn-beet btn-block" type="submit" value="Beet It!"></td>
+                </tr>
+                </form>
+            </table>
+        </div>
     </div>
 {% endblock %}

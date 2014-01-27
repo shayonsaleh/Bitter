@@ -1,0 +1,84 @@
+body {
+padding-top: 60px;
+padding-bottom: 40px;
+}
+
+.btn-beet{
+color: rgb(255, 255, 255); 
+background-image: -webkit-linear-gradient(top, rgb(128, 0, 128), rgb(128, 0, 128)); 
+background-color: rgb(128, 0, 128);
+}
+
+.btn-beet-lighten.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+.btn-beet-lighten {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #7038a8;
+  background-image: -moz-linear-gradient(top, #663399, #7f40bf);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#663399), to(#7f40bf));
+  background-image: -webkit-linear-gradient(top, #663399, #7f40bf);
+  background-image: -o-linear-gradient(top, #663399, #7f40bf);
+  background-image: linear-gradient(to bottom, #663399, #7f40bf);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff663399', endColorstr='#ff7f40bf', GradientType=0);
+  border-color: #7f40bf #7f40bf #592d86;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #7f40bf;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-beet-lighten:hover,
+.btn-beet-lighten:focus,
+.btn-beet-lighten:active,
+.btn-beet-lighten.active,
+.btn-beet-lighten.disabled,
+.btn-beet-lighten[disabled] {
+  color: #ffffff;
+  background-color: #7f40bf;
+  *background-color: #7339ac;
+}
+.btn-beet-lighten:active,
+.btn-beet-lighten.active {
+  background-color: #663399 ;
+}
+
+.flash {
+    padding: 10px;
+    margin: 20px 0;
+    &.error {
+        background: #ffefef;
+        color: #4c1717;
+        border: 1px solid #4c1717;
+    }
+    &.warning {
+        background: #ffe4c1;
+        color: #79420d;
+        border: 1px solid #79420d;
+    }
+    &.notice {
+        background: #efffd7;
+        color: #8ba015;
+        border: 1px solid #8ba015;
+    }
+}
+
+.navbar-text {
+padding-top: 10px;
+}
+
+
+.sidebar-nav {
+padding: 9px 0;
+}
+
+@media (max-width: 980px) {
+    /* Enable use of floated navbar text */
+    .navbar-text.pull-right {
+    float: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    }
+}
